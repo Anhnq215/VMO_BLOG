@@ -1,0 +1,9 @@
+.vscode
+node_modules
+.env
+.env.local
+.DS_Store
+dist
+vmobot-test-key.json
+vmobotcom-test-key.json
+domain-config
