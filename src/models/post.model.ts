@@ -11,25 +11,22 @@ export class Post {
     public sapo : string;
 
     @prop({required: true})
-    public avatar: string;
-
-    @prop({required: true})
     public summary : string;
 
     @prop({required: true})
     public content: string;
 
     @prop({ref: Tag, required: true})
-    public tag: Ref<Tag>;
+    public tag: Ref<Tag>[];
 
     @prop({ref: User, required: true})
-    public user: Ref<User>;
+    public user: Ref<User>[];
 
     @prop({ref: Category, required: true})
     public category: Ref<Category>[];
 }
 
-const PostModel = getModelForClass(User, {
+const PostModel = getModelForClass(Post, {
     schemaOptions: {
         timestamps: true
     }

@@ -3,6 +3,7 @@ import HttpStatusCode from "../../constants/HTTPStatusCode";
 import { IResponse } from "src/types/response.types";
 import Category from "../../models/category.model";
 import mongoose from 'mongoose';
+import categoryService from "../../services/Category/category.service";
 
 const getAllCategory = async (
   _req: Request,
@@ -10,10 +11,7 @@ const getAllCategory = async (
   next: NextFunction
 ) => {
   try {
-    const listCategory = await Category.find();
-    const data: IResponse<typeof listCategory> = {
-      data: listCategory,
-    };
+    const data = await categoryService.getAllCategory();
     res.status(HttpStatusCode.OK).send(data);
   } catch (error) {
     console.log("Function: Get List Category");
@@ -28,15 +26,7 @@ const getOneCategory = async (
 ) => {
   try {
     let {id} = req.params;
-    const _id = mongoose.Types.ObjectId(id);
-    const category = await Category.findOne({
-      _id,
-    });
-
-    const data: IResponse<typeof category> = {
-      data: category,
-    };
-
+    const data = await categoryService.getOneCategory(id);
     res.status(HttpStatusCode.OK).send(data);
   } catch (error) {
     console.log("Function: Get One Category");
@@ -51,18 +41,17 @@ const postOneCategory = async (
 ) => {
     try {
         const { categoryName, categoryDescription, category,  } = req.body
-
-        const categories = await Category.find();
-
-
-        const newCategory = new Category({
+        const newCategory = {
             categoryName,
             categoryDescription,
             category
-        })
-
-        await newCategory.save();
-        res.status(HttpStatusCode.OK).send({data:true})
+        }
+        await categoryService.createOneCategory(newCategory);
+        res.status(HttpStatusCode.OK).send({
+          data:true,
+          message: 'Create success',
+          code: HttpStatusCode.OK
+      })
     } catch (error) {
         console.log("Function: Post One Category");
         next(error);
@@ -76,22 +65,23 @@ const updateOneCategory = async (
 ) => {
     try {
         let {id} = req.params;
-        const _id = mongoose.Types.ObjectId(id);
         const { categoryName, categoryDescription, category,  } = req.body;
-        const categoryInDB = await Category.findOne({
-            _id
-        });
-
-        if (categoryInDB) {
-            await categoryInDB.update({
-                categoryName,
-                categoryDescription,
-                category
-            })
+        
+        const newCategory = {
+          categoryName : categoryName,
+          categoryDescription: categoryDescription,
+          category: category
         }
-        res.status(HttpStatusCode.OK).send({data: true})
+
+        await categoryService.updateOneCategory(id,newCategory );
+
+        res.status(HttpStatusCode.OK).send({
+          data:true,
+          message: 'Update success',
+          code: HttpStatusCode.OK
+      })
     } catch (error) {
-        console.log("Function: Post One Category");
+        console.log("Function: Update One Category");
         next(error);
     }
 }
@@ -104,12 +94,14 @@ const deleteOneCategory = async (
 ) => {
     try {
         let {id} = req.params;
-        const _id = mongoose.Types.ObjectId(id);
-        await Category.deleteOne({
-            _id
-        })
 
-        res.status(HttpStatusCode.OK).send({data:true})
+        await categoryService.deleteOneCategory(id);
+
+        res.status(HttpStatusCode.OK).send({
+          data:true,
+          message: 'Delete success',
+          code: HttpStatusCode.OK
+      })
     } catch (error) {
         console.log("Function: Delete One Category");
         next(error);

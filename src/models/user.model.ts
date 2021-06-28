@@ -4,10 +4,10 @@ export class User {
   @prop({ required: true, minlength: 6, maxlength: 30 })
   public username: string;
 
-  @prop({ required: true })
+  @prop({ required: false })
   public email: string;
 
-  @prop({ required: true, minlength: 6, maxlength: 100 })
+  @prop({ required: false, minlength: 6, maxlength: 100 })
   public password: string;
 
   @prop({
@@ -16,6 +16,11 @@ export class User {
     required: true,
   })
   public avatar: string;
+
+  @prop({
+    required: false
+  })
+  public accessToken: string
 }
 
 const UserModel = getModelForClass(User, {

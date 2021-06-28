@@ -11,7 +11,7 @@ const db = {
 const connect = async () => {
   try {
     const auth = db.username ? `${db.username}:${db.password}@` : "";
-    const MONGO_URI = `mongodb${db.prefix}://${auth}${db.host}${db.port}?${process.env.DB_CONNECT_OPTIONS}`;
+    const MONGO_URI = `mongodb${db.prefix}://${auth}${db.host}${db.port}/${process.env.DB_NAME}?${process.env.DB_CONNECT_OPTIONS}`;
     await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
